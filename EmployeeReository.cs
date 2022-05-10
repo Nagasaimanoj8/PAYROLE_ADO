@@ -46,6 +46,10 @@ namespace Ado.Net
                             Console.WriteLine("\n");
                         }
                     }
+                    else
+                    {
+                        Console.WriteLine("No rows Present");
+                    }
                 }
             }
             catch (Exception ex)
