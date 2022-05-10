@@ -8,9 +8,16 @@ namespace Ado.Net
 {
     class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            EmployeeReository repo =new EmployeeReository();
+            EmployeePayRole role= new EmployeePayRole();
+            role.Name = "Sowmya";
+            role.Gender = "Female";
+            role.Address = "IceLand";
+            role.BasicPay = 7894561;
+            role.Phone = 789458977;
+            EmployeeReository repo = new EmployeeReository();
+            repo.AddEmployee(role);
             repo.GetAllEmployees();
             Console.ReadLine();
         }
