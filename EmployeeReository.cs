@@ -56,6 +56,10 @@ namespace Ado.Net
             {
                 Console.WriteLine(ex.Message);
             }
+            finally
+            {
+                connection.Close();
+            }
         }
 
     }
