@@ -10,7 +10,7 @@ namespace Ado.Net
     {
         public string Name { get; set; }
         public int EmployeeId { get; set; }
-        public int Phone { get; set; }
+        public int phone { get; set; }
         public double BasicPay { get; set; }
         public DateTime startdate { get; set; }
         public string Gender { get; set; }

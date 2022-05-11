@@ -36,14 +36,14 @@ namespace Ado.Net
                             role.startdate = (DateTime)((reader["StartDate"] == DBNull.Value ? default(DateTime) : reader["StartDate"]));
                             role.Gender = reader["Gender"] == DBNull.Value ? default : reader["Gender"].ToString();
                             //role.Phonem=number =Convert.ToDouble(reader["phone"]);
-                            role.Phone = Convert.ToInt32(reader["Phone"] == DBNull.Value ? default : reader["Phone"]);
+                            role.phone = Convert.ToInt32(reader["Phone"] == DBNull.Value ? default : reader["phone"]);
                             role.Department = reader["Department"] == DBNull.Value ? default : reader["Department"].ToString();
                             role.Address = reader["Address"] == DBNull.Value ? default : reader["Address"].ToString();
                             role.TaxablePay = Convert.ToDouble(reader["TaxablePAy"] == DBNull.Value ? default : reader["Taxable"]);
                             role.Deduction = Convert.ToDouble(reader["Deduction"] == DBNull.Value ? default : reader["Deduction"]);
                             role.NetPay = Convert.ToDouble(reader["NetPay"] == DBNull.Value ? default : reader["NetPay"]);
                             role.IncomeTax = Convert.ToDouble(reader["IncomeTax"] == DBNull.Value ? default : reader["IncomeTax"]);
-                            Console.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8}", role.EmployeeId, role.Name, role.Gender, role.Address, role.BasicPay, role.Phone, role.Deduction, role.Department, role.startdate);
+                            Console.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8}", role.EmployeeId, role.Name, role.Gender, role.Address, role.BasicPay, role.phone, role.Deduction, role.Department, role.startdate);
                             Console.WriteLine("\n");
                         }
                     }
@@ -75,7 +75,7 @@ namespace Ado.Net
                     command.Parameters.AddWithValue("@Name", role.Name);
                     command.Parameters.AddWithValue("@Address", role.Address);
                     command.Parameters.AddWithValue("@BasicPay", role.BasicPay);
-                    command.Parameters.AddWithValue("@phone", role.Phone);
+                    command.Parameters.AddWithValue("@phone", role.phone);
                     command.Parameters.AddWithValue("@Gender", role.Gender);
                     connection.Open();
                     int result = command.ExecuteNonQuery();
@@ -105,8 +105,36 @@ namespace Ado.Net
                     SqlCommand command = new SqlCommand("dbo.spUpdateEmployee", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@Name", role.Name);
-                    command.Parameters.AddWithValue("@Id", role.EmployeeId);                    
-                    command.Parameters.AddWithValue("@BasicPay", role.BasicPay);                    
+                    command.Parameters.AddWithValue("@Id", role.EmployeeId);
+                    connection.Open();
+                    int result = command.ExecuteNonQuery();
+                    if (result != 0)
+                        Console.WriteLine("Updated sucessfull ");
+                    else
+                        Console.WriteLine("Updated Unsucessfull");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+        }
+        public void DeleteEmployee(EmployeePayRole role)
+        {
+            try
+            {
+                using (connection = new SqlConnection(ConnectionString))
+                {
+                    EmployeePayRole displayModel = new EmployeePayRole();
+                    SqlCommand command = new SqlCommand("dbo.spDeleteEmployee", connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@id", role.EmployeeId);
+                    command.Parameters.AddWithValue("@phone", role.phone);
                     connection.Open();
                     int result = command.ExecuteNonQuery();
                     if (result != 0)
