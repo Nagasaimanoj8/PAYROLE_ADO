@@ -11,14 +11,14 @@ namespace Ado.Net
         public static void Main(string[] args)
         {
             EmployeePayRole role= new EmployeePayRole();
-            role.Name = "Sowmya";
+            role.Name = "NM";
             role.Gender = "Female";
-            role.Address = "IceLand";
-            role.BasicPay = 7894561;
-            role.Phone = 789458977;
+            role.EmployeeId = 3;
+            role.BasicPay = 78945610;
             EmployeeReository repo = new EmployeeReository();
             repo.AddEmployee(role);
             repo.GetAllEmployees();
+            repo.UpdateEmployee(role);
             Console.ReadLine();
         }
     }

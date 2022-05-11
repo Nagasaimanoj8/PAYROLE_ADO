@@ -95,5 +95,35 @@ namespace Ado.Net
             }
 
         }
+        public void UpdateEmployee(EmployeePayRole role)
+        {
+            try
+            {
+                using (connection = new SqlConnection(ConnectionString))
+                {
+                    EmployeePayRole displayModel = new EmployeePayRole();
+                    SqlCommand command = new SqlCommand("dbo.spUpdateEmployee", connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@Name", role.Name);
+                    command.Parameters.AddWithValue("@Id", role.EmployeeId);                    
+                    command.Parameters.AddWithValue("@BasicPay", role.BasicPay);                    
+                    connection.Open();
+                    int result = command.ExecuteNonQuery();
+                    if (result != 0)
+                        Console.WriteLine("Updated sucessfull ");
+                    else
+                        Console.WriteLine("Updated Unsucessfull");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+        }
     }
 }
