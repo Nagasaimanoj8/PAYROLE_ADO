@@ -1,5 +1,2 @@
-﻿Alter procedure spDeleteEmployee
-@Name varchar,
-@id int
-As
-delete from employeee_payroll where Name=@Name and id=@id;
+﻿SELECT * FROM employeee_payroll
+WHERE StartDate BETWEEN CAST('02-01-2022' AS DATE ) AND GETDATE();

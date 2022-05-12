@@ -90,6 +90,7 @@
     <Compile Include="EmployeeReository.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Salary.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.editorconfig">
