@@ -192,61 +192,57 @@ namespace Ado.Net
             }
 
         }
-        public void GetEmployeeDetailsByDate()
+        public void DisplayDataBasedOnDate(DateTime startdate, DateTime dateTime)
         {
-
+            EmployeePayRole role = new EmployeePayRole();
             try
             {
                 using (connection = new SqlConnection(ConnectionString))
                 {
-                    EmployeePayRole role = new EmployeePayRole();
-                    DateTime startDate = new DateTime(2022, 01, 02);
-                    DateTime endDate = new DateTime(2022, 06, 02);
+                    //passing query in terms of stored procedure
+                    SqlCommand sqlCommand = new SqlCommand("RetrieveDate", connection);
+                    //passing command type as stored procedure
+                    sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
                     connection.Open();
-                    SqlCommand sqlCommand = new SqlCommand("spGetDataByDate", connection);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    sqlCommand.Parameters.AddWithValue("@StartDate", startDate);
-                    sqlCommand.Parameters.AddWithValue("@EndDate", endDate);
+                    //adding the parameter to the strored procedure
+                    sqlCommand.Parameters.AddWithValue("@startDate", startdate);
+                    sqlCommand.Parameters.AddWithValue("@endDate", dateTime);
                     SqlDataReader reader = sqlCommand.ExecuteReader();
+                    //if it has data
                     if (reader.HasRows)
                     {
                         while (reader.Read())
                         {
-                            role.EmployeeId = Convert.ToInt32(reader["id"] == DBNull.Value ? default : reader["id"]);
-                            //role.EmployeeId=Convert.ToInt(reader[0]);
-                            role.Name = reader["Name"] == DBNull.Value ? default : reader["Name"].ToString();
-                            role.BasicPay = Convert.ToDouble(reader["BasicPay"] == DBNull.Value ? default : reader["BasicPay"]);
-                            role.startdate = (DateTime)((reader["StartDate"] == DBNull.Value ? default(DateTime) : reader["StartDate"]));
-                            role.Gender = reader["Gender"] == DBNull.Value ? default : reader["Gender"].ToString();
-                            //role.Phonem=number =Convert.ToDouble(reader["phone"]);
-                            role.phone = Convert.ToInt32(reader["Phone"] == DBNull.Value ? default : reader["phone"]);
-                            role.Department = reader["Department"] == DBNull.Value ? default : reader["Department"].ToString();
-                            role.Address = reader["Address"] == DBNull.Value ? default : reader["Address"].ToString();
-                            role.TaxablePay = Convert.ToDouble(reader["TaxablePAy"] == DBNull.Value ? default : reader["Taxable"]);
-                            role.Deduction = Convert.ToDouble(reader["Deduction"] == DBNull.Value ? default : reader["Deduction"]);
-                            role.NetPay = Convert.ToDouble(reader["NetPay"] == DBNull.Value ? default : reader["NetPay"]);
-                            role.IncomeTax = Convert.ToDouble(reader["IncomeTax"] == DBNull.Value ? default : reader["IncomeTax"]);
-
-                            //// display the payroll data from database
-                            Console.WriteLine("{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} ", role.EmployeeId, role.Name,
-                                role.Gender, role.phone, role.Address, role.Department, role.BasicPay, role.Deduction,
-                                role.TaxablePay, role.IncomeTax, role.NetPay, role.startdate);
+                            //store each data in the employee details properties 
+                            role.EmployeeId = Convert.ToInt32(reader["id"]);
+                            role.Name = reader["name"].ToString();
+                            role.Gender = reader["gender"].ToString();
+                            role.startdate = reader.GetDateTime(2);
+                            role.phone = Convert.ToInt32(reader["phoneNumber"]);
+                            role.Address = reader.GetString(5);
+                            role.Department = reader.GetString(6);
+                            //display the result
+                            Console.WriteLine("{0} {1} {2} {3} {4} {5} {6} ", role.EmployeeId, role.Name, role.Gender, role.startdate, role.phone, role.Address, role.Department);
+                            ;
                         }
+                        reader.Close();
+                        return;
                     }
                     else
                     {
-                        Console.WriteLine("No record found");
+                        reader.Close();
                     }
-                    reader.Close();
                 }
             }
+            //if any exception occurs catch and display exception message
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                throw new Exception(e.Message);
             }
+            //finally close the connection
             finally
             {
-                this.connection.Close();
+                connection.Close();
             }
         }
     }

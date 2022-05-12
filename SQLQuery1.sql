@@ -1,2 +1,9 @@
-﻿SELECT * FROM employeee_payroll
-WHERE StartDate BETWEEN CAST('02-01-2022' AS DATE ) AND GETDATE();
+﻿CREATE PROCEDURE [dbo].[RetrieveData]
+(
+	@startdate date,
+	@enddate date
+	)
+AS
+BEGIN
+	SELECT * from PayRollTable where startDate between CAST('2020-07-31'as date)and getdate();
+END
