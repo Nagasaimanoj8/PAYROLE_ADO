@@ -390,6 +390,76 @@ namespace Ado.Net
                 this.connection.Close();
             }
         }
+        s public void InsertToTwoTables(EmployeePayRole role)
+        {
+            try
+            {
+                connection = new SqlConnection(ConnectionString);
+                connection.Open();
+                SqlCommand command = new SqlCommand("dbo.spInsertIntoTwoTable", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@Name", role.Name);
+                command.Parameters.AddWithValue("@Gender", role.Gender);
+                command.Parameters.AddWithValue("@Address", role.Address);
+                command.Parameters.Add("@id", SqlDbType.Int).Direction = ParameterDirection.Output;
+                var result = command.ExecuteScalar();
+                string id = command.Parameters["@id"].Value.ToString();
+                int newId = Convert.ToInt32(id);
+                string query = $"insert into Salary(EmployeeId,Salary)values({newId},7847584)";
+                SqlCommand commnd = new SqlCommand(query, connection);
+                int res = commnd.ExecuteNonQuery();
+                if (res != 0)
+                    Console.WriteLine("Insert into Salary table sucessfully ");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        public void InsertToTwoTablesWithTranctions()
+        {
+            using (connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+                //Start a local transaction Using sqlTransactionclass
+                SqlTransaction sqlTran = connection.BeginTransaction();
+                //Enlist a command in the current transactin.
+                SqlCommand command = connection.CreateCommand();
+                command.Transaction = sqlTran;
+                try
+                {
+                    //Execute two seperate commands.
+                    command.CommandText = "insert into employeee_payroll(Name,BasciPay,Address)Values('Clay','45000','Africa')";
+                    command.ExecuteScalar();
+                    command.CommandText = "insert into Salary(Salary,Employeeid)Values(60000,17)";
+                    int res = command.ExecuteNonQuery();
+                    if (res != 0)
+                    {
+                        //Commit the transaction
+                        sqlTran.Commit();
+                        Console.WriteLine("Both quries successfull");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //Hanlde the exception if he tranction fails commit.
+                    Console.WriteLine(ex.Message);
+                    try
+                    {
+                        //Attempt to roll back the trnsaction.
+                        sqlTran.Rollback();
+                    }
+                    catch (Exception exRollback)
+                    {
+                        //Throws an InvalidOperationException If The Connection
+                        //is closed or the transacttion ha already been rolled
+                        //back on the server.
+                        Console.WriteLine(exRollback.Message);
+                    }
+                }
+            }
+        }
+
     }
 }
 

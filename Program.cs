@@ -20,7 +20,9 @@ namespace Ado.Net
             repo.GetAllEmployees();
             Console.WriteLine("\nSalary details");
             repo.GetAllEmployeeSalary();
-            // repo.UpdateEmployee(role);
+            repo.UpdateEmployee(role);
+            repo.InsertToTwoTables(role);
+            repo.InsertToTwoTablesWithTranctions();
             while (true)
             {
                 Console.WriteLine("1)SumofsalarybyGender\n" + "2)Maxof salary by genger\n"
